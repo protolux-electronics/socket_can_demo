@@ -1,0 +1,3 @@
+[env]
+MIX_TARGET = "socket_can_rpi4"
+MIX_ENV = "dev"
