@@ -76,8 +76,7 @@ config :vintage_net,
        type: VintageNetSocketCAN,
        vintage_net_socket_can: %{
          loopback: true,
-         bitrate: 1_000_000,
-         sample_point: 0.85
+         bitrate: 500_000
        }
      }}
   ]
@@ -107,14 +106,29 @@ config :mdns_lite,
       port: 22
     },
     %{
+      protocol: "http",
+      transport: "tcp",
+      port: 80
+    },
+    %{
       protocol: "epmd",
       transport: "tcp",
       port: 4369
     }
   ]
 
-# Import target specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-# Uncomment to use target specific configurations
+config :socket_can_demo, SocketCanDemo.Repo,
+  database: "/data/socket_can_demo.db",
+  pool_size: 5
+
+# Configures the endpoint
+config :socket_can_demo, SocketCanDemoWeb.Endpoint,
+  server: true,
+  url: [host: "nerves.local", port: 80, scheme: "http"],
+  http: [ip: {0, 0, 0, 0}, port: 80],
+  code_reloader: false,
+  check_origin: false,
+  debug_errors: true,
+  secret_key_base: "lFTki9t2mbLWMhgzvImyS1Jn0AqrmlFkR0cOvnuxUHNoc/14usHGe3QrX0AgXbMM"
 
 # import_config "#{Mix.target()}.exs"

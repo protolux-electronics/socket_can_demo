@@ -15,4 +15,11 @@
 
 # If the VM crashes, it generates a dump, let's ignore it too.
 erl_crash.dump
+
+# Project secrets
 .mise.local.toml
+
+# Ignore database files
+*.db
+*.db-shm
+*.db-wal

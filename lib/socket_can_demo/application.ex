@@ -13,32 +13,42 @@ defmodule SocketCanDemo.Application do
 
     children =
       [
-        # Children for all targets
-        # Starts a worker by calling: SocketCanDemo.Worker.start_link(arg)
-        # {SocketCanDemo.Worker, arg},
+        SocketCanDemoWeb.Telemetry,
+        SocketCanDemo.Repo,
+        {Ecto.Migrator,
+         repos: Application.fetch_env!(:socket_can_demo, :ecto_repos), skip: skip_migrations?()},
+        {Phoenix.PubSub, name: SocketCanDemo.PubSub},
+        SocketCanDemoWeb.Endpoint
       ] ++ children(target())
 
     Supervisor.start_link(children, opts)
   end
 
+  # Tell Phoenix to update the endpoint configuration
+  # whenever the application is updated.
+  @impl true
+  def config_change(changed, _new, removed) do
+    SocketCanDemoWeb.Endpoint.config_change(changed, removed)
+    :ok
+  end
+
   # List all child processes to be supervised
   def children(:host) do
-    [
-      # Children that only run on the host
-      # Starts a worker by calling: SocketCanDemo.Worker.start_link(arg)
-      # {SocketCanDemo.Worker, arg},
-    ]
+    []
   end
 
   def children(_target) do
     [
-      # Children for all targets except host
-      # Starts a worker by calling: SocketCanDemo.Worker.start_link(arg)
-      # {SocketCanDemo.Worker, arg},
+      {SocketCAN, name: SocketCanDemo.SocketCAN, interface: "can0"}
     ]
   end
 
   def target() do
     Application.get_env(:socket_can_demo, :target)
+  end
+
+  defp skip_migrations?() do
+    # By default, sqlite migrations are run when using a release
+    System.get_env("RELEASE_NAME") != nil
   end
 end
