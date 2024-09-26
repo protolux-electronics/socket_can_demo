@@ -52,7 +52,8 @@ defmodule SocketCanDemo.MixProject do
       # version updates, please review their release notes in case
       # changes to your application are needed.
       {:nerves_system_rpi4, "~> 1.28.0", runtime: false, targets: :rpi4},
-      {:socket_can_rpi4, path: "../socket_can_rpi4", runtime: false, targets: :socket_can_rpi4},
+      {:socket_can_rpi4,
+       github: "protolux-electronics/socket_can_rpi4", runtime: false, targets: :socket_can_rpi4},
 
       # Phoenix dependencies
       {:phoenix, "~> 1.7.14"},
